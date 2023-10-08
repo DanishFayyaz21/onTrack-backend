@@ -6,6 +6,7 @@ const teamSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  description:String,
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "user", // Assuming 'User' is the name of your User model

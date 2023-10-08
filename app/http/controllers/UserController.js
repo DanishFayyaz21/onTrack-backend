@@ -2,6 +2,8 @@ import bcrypt, { hash } from "bcrypt";
 import User from "../../models/User.js";
 import jwt from 'jsonwebtoken'
 import Joi from 'joi'
+import Team from "../../models/team/team.js";
+import Driver from "../../models/driver.js";
 
 const UserController = {
    async loginUser(req, res) {
@@ -176,6 +178,114 @@ const UserController = {
                status: 201,
                message: "User registered successfully",
                createUser
+            })
+         }
+      } catch (error) {
+
+         res.status(400).json({ success: false })
+      }
+   },
+
+   async addDriver(req, res) {
+      const userId = req.user.id
+      console.log("ssssssssssssssssssssssssss")
+      const { firstName, lastName, username, email, role, phoneNumber, password, avatar,
+         address,
+         city,
+         state,
+         zipCode,
+         model,
+         licensePlate,
+         color,
+         team } = req.body
+      const teamExist = await Team.findOne({ _id: team })
+      if (!teamExist) {
+         return res.state(404).json("Team not found.")
+      }
+      console.log("lllllllllllllllllllllllllssss", teamExist)
+
+      // Validation
+      const fileName = req?.file?.filename
+      const userSchema = Joi.object({
+         username: Joi.string().required(),
+         firstName: Joi.string().required(),
+         lastName: Joi.string().required(),
+         email: Joi.string().email().required(),
+         password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required(),
+         role: Joi.string(),
+         phoneNumber: Joi.string().allow(""),
+         avatar: Joi.string().allow(""),
+         address: Joi.string().allow(""),
+         city: Joi.string().allow(""),
+         state: Joi.string().allow(""),
+         zipCode: Joi.string().allow(""),
+         model: Joi.string().allow(""),
+         licensePlate: Joi.string().allow(""),
+         color: Joi.string().allow(""),
+         team: Joi.string().allow("")
+      })
+
+      // Validation error handler
+      const { error } = userSchema.validate(req.body);
+      if (error) {
+         return res.status(400).json({
+            status: 400,
+            message: "Invalid fields.",
+            error
+         })
+      }
+      const adminExist = await User.exists({ _id: userId })
+      if (!adminExist) {
+         return res.status(400).json({
+            status: 400,
+            message: "Un Authorized",
+         })
+      }
+
+      const userOld = await User.findOne({ email: email })
+      if (userOld) {
+         return res.status(400).json({
+            status: 400,
+            message: "User Already exist.",
+         })
+      }
+      try {
+         //Hash Password
+         const salt = await bcrypt.genSalt(10);
+         const hashPassword = await bcrypt.hash(password, salt);
+         const formData = {
+            username,
+            firstName,
+            lastName,
+            email,
+            password: hashPassword,
+            role,
+            phoneNumber,
+            avatar: fileName,
+            createdBy: userId,
+            address,
+            city,
+            state,
+            zipCode,
+            transportation: {
+               model,
+               licensePlate,
+               color
+            },
+            team
+         }
+         const createUser = await Driver.create(formData)
+         if (createUser) {
+            teamExist.members.unshift(createUser._id)
+            teamExist.save().then((updated) => {
+               res.status(201).json({
+                  status: 201,
+                  message: "User registered successfully",
+                  createUser
+               })
+            }).catch((error) => {
+
+               res.status(400).json({ success: false })
             })
          }
       } catch (error) {

@@ -5,7 +5,7 @@ const TeamController = {
 
     // for creating basic info
     async createTeam(req, res,) {
-        const { name, location } = req.body;
+        const { name, location,description } = req.body;
         const userId = req.user.id
         // find user
         const user = await User.exists({ _id: userId });
@@ -24,7 +24,8 @@ const TeamController = {
         Team.create({
             name,
             createdBy: userId,
-            location
+            location,
+            description
         }).then((response) => {
             res.status(201).json({
                 status: 201,

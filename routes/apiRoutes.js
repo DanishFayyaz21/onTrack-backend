@@ -19,6 +19,7 @@ router.get('/get-user-by-id', auth, UserContoller.getUserByID)
 router.get('/get-all-users', auth, UserContoller.getAllUsers)
 router.delete('/delete-user', auth, UserContoller.deleteUserById)
 router.post('/add-user', [auth, Upload.single('avatar')], UserContoller.addUser)
+router.post('/add-driver', [auth, Upload.single('avatar')], UserContoller.addDriver)
 
 
 export default router
