@@ -14,13 +14,13 @@ const TeamController = {
                 error: 'user not found'
             })
         }
-        const TeamExist = await Team.exists({ createdBy: userId })
-        if (TeamExist) {
-            return res.status(409).json({
-                status: 409,
-                message: "You already have a team"
-            })
-        }
+        // const TeamExist = await Team.exists({ createdBy: userId })
+        // if (TeamExist) {
+        //     return res.status(409).json({
+        //         status: 409,
+        //         message: "You already have a team"
+        //     })
+        // }
         Team.create({
             name,
             createdBy: userId,

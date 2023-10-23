@@ -200,7 +200,7 @@ const UserController = {
          team } = req.body
       const teamExist = await Team.findOne({ _id: team })
       if (!teamExist) {
-         return res.state(404).json("Team not found.")
+         return res.status(404).json("Team not found.")
       }
       console.log("lllllllllllllllllllllllllssss", teamExist)
 
@@ -384,8 +384,9 @@ const UserController = {
    },
 
    async getAllUsers(req, res) {
+      const role = req.query.role
       const projection = { password: 0 };
-      let users = await User.find({}, projection).populate({ path: 'createdBy', select: 'email username' })
+      let users = await User.find(role ? { role } : {}, projection).populate({ path: 'createdBy', select: 'email username' })
       if (!(users.length > 0)) {
          return res.status(404).json({
             status: 404,
