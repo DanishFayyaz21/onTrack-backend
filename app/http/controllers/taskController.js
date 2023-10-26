@@ -6,25 +6,56 @@ const taskController = {
     // api for create task with status
     async createTask(req, res) {
         const userId = req.user.id
-        const { title, description, assignedTo, status, dueDate } = req.body;
+        const { name, taskDetails, qty, assignedTo,
+            address,
+            city,
+            state,
+            zipCode,
+            destinationNote,
+            reciptionNote,
+
+            phoneNumber,
+            email,
+
+            completeAfter,
+            completeBefore,
+            serviceTime,
+            status
+        } = req.body;
 
         // const TeamExist = await Team.findOne({ createdBy: userId })
         // if (!TeamExist) {
         //     return res.status(404).json({ message: "Team not found" })
         // }
         // validation for status
-        if (status !== 'complete' && status !== 'important' && status !== 'delete') {
-            return res.status(400).json({
-                message: 'status value is not valid'
-            })
-        }
+
+        // if (status !== 'complete' && status !== 'important' && status !== 'delete') {
+        //     return res.status(400).json({
+        //         message: 'status value is not valid'
+        //     })
+        // }
+
         Task.create({
-            title,
-            description,
+            name,
+            taskDetails,
+            qty,
             assignedTo,
-            // team: TeamExist._id,
-            status,
-            dueDate,
+            address,
+            city,
+            state,
+            zipCode,
+            destinationNote,
+            reciptionNote,
+
+            phoneNumber,
+            email,
+            time: {
+                completeAfter,
+                completeBefore,
+                serviceTime
+            },
+            createdBy: userId,
+            status
         }).then((response) => {
             res.status(201).json({
                 message: 'task created successfully',

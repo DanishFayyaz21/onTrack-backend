@@ -1,17 +1,41 @@
 import mongoose from "mongoose";
 
 const taskSchema = new mongoose.Schema({
-    title: {
+    name: {
         type: String,
         required: true,
     },
-    description: {
+    taskDetails: {
         type: String,
-        required: true,
+        // required: true,
+    },
+    qty: {
+        type: String,
+        // required: true,
     },
     assignedTo: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'TeamUser',
+        ref: 'user',
+    },
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user',
+    },
+    address: String,
+    city: String,
+    state: String,
+    zipCode: String,
+    destinationNote: String,
+    reciptionNote: String,
+    contact: {
+        phoneNumber: String,
+        email: String,
+    },
+
+    time: {
+        completeAfter: Date,
+        completeBefore: Date,
+        serviceTime: String,
     },
     // team: {
     //     type: mongoose.Schema.Types.ObjectId,
@@ -21,11 +45,9 @@ const taskSchema = new mongoose.Schema({
     status: {
         type: String,
         enum: ['complete', 'important', 'delete'],
-        required: true,
+        // required: true,
     },
-    dueDate: {
-        type: Date,
-    }
+
 });
 
 const Task = mongoose.model('Task', taskSchema);
