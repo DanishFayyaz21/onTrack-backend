@@ -384,9 +384,10 @@ const UserController = {
    },
 
    async getAllUsers(req, res) {
+      const id = req.user.id
       const role = req.query.role
       const projection = { password: 0 };
-      let users = await User.find(role ? { role } : {}, projection).populate({ path: 'createdBy', select: 'email username' })
+      let users = await User.find(role ? { $and: [{ role }, { createdBy: id }] } : { createdBy: id }, projection).populate({ path: 'createdBy', select: 'email username' })
       if (!(users.length > 0)) {
          return res.status(404).json({
             status: 404,

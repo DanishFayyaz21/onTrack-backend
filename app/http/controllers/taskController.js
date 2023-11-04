@@ -22,6 +22,7 @@ const taskController = {
             serviceTime,
             status
         } = req.body;
+        console.log("body", req.body)
 
         // const TeamExist = await Team.findOne({ createdBy: userId })
         // if (!TeamExist) {
@@ -59,6 +60,7 @@ const taskController = {
         }).then((response) => {
             res.status(201).json({
                 message: 'task created successfully',
+                status: 201,
                 data: { task: response },
             })
         }).catch((error) => {
@@ -117,7 +119,7 @@ const taskController = {
         //     return res.status(404).json({ status: 404, message: "Team Not found" })
         // }
 
-        const allTasks = await Task.find()
+        const allTasks = await Task.find().populate("assignedTo")
         if (allTasks.length > 0) {
             res.status(200).json({
                 status: 200,

@@ -5,7 +5,7 @@ const TeamController = {
 
     // for creating basic info
     async createTeam(req, res,) {
-        const { name, location,description } = req.body;
+        const { name, location, description } = req.body;
         const userId = req.user.id
         // find user
         const user = await User.exists({ _id: userId });
@@ -198,8 +198,9 @@ const TeamController = {
 
     },
     async allTeams(req, res, next) {
+        const id = req.user.id
         try {
-            const teams = await Team.find().populate("members")
+            const teams = await Team.find({ createdBy: id }).populate("members")
             if (!teams.length) {
                 return res.status(404).json({
                     status: 404,
@@ -220,7 +221,7 @@ const TeamController = {
 
     },
     async getTeamMembers(req, res, next) {
-        const { teamId } = req.body
+        const { teamId } = req.query
         if (!teamId) {
             return res.status(400).json({
                 status: 400,
