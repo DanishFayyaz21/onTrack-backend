@@ -188,7 +188,7 @@ const UserController = {
 
    async addDriver(req, res) {
       const userId = req.user.id
-      console.log("ssssssssssssssssssssssssss")
+
       const { firstName, lastName, username, email, role, phoneNumber, password, avatar,
          address,
          city,
@@ -202,7 +202,6 @@ const UserController = {
       if (!teamExist) {
          return res.status(404).json("Team not found.")
       }
-      console.log("lllllllllllllllllllllllllssss", teamExist)
 
       // Validation
       const fileName = req?.file?.filename
@@ -400,7 +399,7 @@ const UserController = {
       const id = req.query.id
       try {
          const response = await User.findOneAndDelete({ _id: id })
-         console.log("response", response)
+
          if (response) {
             res.status(200).json({
                status: 200,
