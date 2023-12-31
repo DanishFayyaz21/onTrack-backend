@@ -14,7 +14,7 @@ const app = express()
 
 // app port
 
-const port = process.env.APP_PORT
+const port = process.env.APP_PORT || 8080;
 
 // cors options
 
